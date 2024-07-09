@@ -8,4 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class CD extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'nit',
+        'nombre',
+        'ubicacion',
+    ];
 }

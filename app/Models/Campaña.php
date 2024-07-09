@@ -8,4 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class Campaña extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'cd_id',
+        'nombre',
+        'fecha_realizacion',
+        'evidencia',
+    ];
 }

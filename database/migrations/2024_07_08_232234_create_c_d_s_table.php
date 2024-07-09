@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('c_d_s', function (Blueprint $table) {
             $table->id();
+            $table->string('nit')->unique();
+            $table->string('nombre');
+            $table->string('ubicacion');
             $table->timestamps();
         });
     }

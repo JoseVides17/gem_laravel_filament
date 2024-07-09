@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('campañas', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('cd_id')->constrained('c_d_s');
+            $table->string('nombre');
+            $table->date('fecha_realizacion');
+            $table->string('evidencia')->nullable();
             $table->timestamps();
         });
     }
