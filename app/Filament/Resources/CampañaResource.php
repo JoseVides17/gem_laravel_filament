@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\CDResource\Pages;
-use App\Filament\Resources\CDResource\RelationManagers;
-use App\Models\CD;
+use App\Filament\Resources\CampañaResource\Pages;
+use App\Filament\Resources\CampañaResource\RelationManagers;
+use App\Models\Campaña;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -13,27 +13,25 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class CDResource extends Resource
+class CampañaResource extends Resource
 {
-    protected static ?string $model = CD::class;
+    protected static ?string $model = Campaña::class;
 
-    protected static ?string $navigationIcon = 'heroicon-s-building-storefront';
-    protected static ?string $navigationLabel = 'Centro de Distribucion';
-    protected static ?string $navigationGroup = 'Sistema';
-    protected static ?int $navigationSort = 2;
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('nit')
+                Forms\Components\TextInput::make('cd.nombre')
                     ->required()
-                    ->maxLength(255),
+                    ->numeric(),
                 Forms\Components\TextInput::make('nombre')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('ubicacion')
-                    ->required()
+                Forms\Components\DatePicker::make('fecha_realizacion')
+                    ->required(),
+                Forms\Components\TextInput::make('evidencia')
                     ->maxLength(255),
             ]);
     }
@@ -42,11 +40,15 @@ class CDResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('nit')
-                    ->searchable(),
+                Tables\Columns\TextColumn::make('cd_id')
+                    ->numeric()
+                    ->sortable(),
                 Tables\Columns\TextColumn::make('nombre')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('ubicacion')
+                Tables\Columns\TextColumn::make('fecha_realizacion')
+                    ->date()
+                    ->sortable(),
+                Tables\Columns\TextColumn::make('evidencia')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
@@ -80,9 +82,9 @@ class CDResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListCDS::route('/'),
-            'create' => Pages\CreateCD::route('/create'),
-            'edit' => Pages\EditCD::route('/{record}/edit'),
+            'index' => Pages\ListCampañas::route('/'),
+            'create' => Pages\CreateCampaña::route('/create'),
+            'edit' => Pages\EditCampaña::route('/{record}/edit'),
         ];
     }
 }

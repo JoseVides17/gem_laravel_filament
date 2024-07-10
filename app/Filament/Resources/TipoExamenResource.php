@@ -18,6 +18,9 @@ class TipoExamenResource extends Resource
     protected static ?string $model = TipoExamen::class;
 
     protected static ?string $navigationIcon = 'heroicon-c-queue-list';
+    protected static ?string $navigationLabel = 'Tipos de Examenes';
+    protected static ?string $navigationGroup = 'Sistema';
+    protected static ?int $navigationSort = 3;
 
     public static function form(Form $form): Form
     {

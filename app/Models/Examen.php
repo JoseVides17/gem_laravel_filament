@@ -15,7 +15,7 @@ class Examen extends Model
         'fecha_previa',
         'fecha_realizacion',
         'fecha_vencimiento',
-        'tipo_examen',
+        'tipo_examen_id',
         'dias_disponibles',
         'estatus',
         'enfasis',
@@ -37,4 +37,14 @@ class Examen extends Model
         'seguimiento',
         'restricciones',
     ];
+
+    public function empleado()
+    {
+        return $this->belongsTo(Empleado::class);
+    }
+
+    public function tipoExamen()
+    {
+        return $this->belongsTo(TipoExamen::class);
+    }
 }

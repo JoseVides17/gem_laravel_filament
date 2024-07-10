@@ -19,6 +19,9 @@ class EmpleadoResource extends Resource
     protected static ?string $model = Empleado::class;
 
     protected static ?string $navigationIcon = 'heroicon-c-user-group';
+    protected static ?string $navigationGroup = 'Gestion de empleados';
+    protected static ?string $navigationLabel = 'Empleados';
+    protected static ?int $navigationSort = 1;
 
     public static function form(Form $form): Form
     {
@@ -61,7 +64,8 @@ class EmpleadoResource extends Resource
                         ->disk('public')
                         ->directory('fotos_perfil')
                         ->image()
-                        ->nullable(),
+                        ->nullable()
+                    ->hiddenOn('edit'),
                 ]),
                 Forms\Components\Section::make('Informacion Laboral')
                     ->columns(3)
@@ -134,8 +138,8 @@ class EmpleadoResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('ciudad')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('estado')
-                    ->searchable(),
+                Tables\Columns\IconColumn::make('estado')
+                    ->boolean(),
                 Tables\Columns\TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

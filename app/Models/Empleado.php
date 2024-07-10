@@ -31,4 +31,9 @@ class Empleado extends Model
     {
         return $this->belongsTo(CD::class, 'cd_id');
     }
+
+    public function examenes()
+    {
+        return $this->hasMany(Examen::class);
+    }
 }

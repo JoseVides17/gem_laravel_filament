@@ -14,4 +14,9 @@ class CD extends Model
         'nombre',
         'ubicacion',
     ];
+
+    public function campañas()
+    {
+        return $this->hasMany(Campaña::class);
+    }
 }

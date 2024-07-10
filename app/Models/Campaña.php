@@ -15,4 +15,9 @@ class Campaña extends Model
         'fecha_realizacion',
         'evidencia',
     ];
+
+    public function cd()
+    {
+        return $this->belongsTo(CD::class);
+    }
 }
