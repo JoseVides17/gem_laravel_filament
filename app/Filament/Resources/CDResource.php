@@ -17,6 +17,8 @@ class CDResource extends Resource
 {
     protected static ?string $model = CD::class;
 
+    protected static ?string $label = 'Centros de Distribucion';
+
     protected static ?string $navigationIcon = 'heroicon-s-building-storefront';
     protected static ?string $navigationLabel = 'Centro de Distribucion';
     protected static ?string $navigationGroup = 'Sistema';

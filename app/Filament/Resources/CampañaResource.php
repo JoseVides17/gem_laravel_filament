@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\CampañaResource\Pages;
 use App\Filament\Resources\CampañaResource\RelationManagers;
 use App\Models\Campaña;
+use App\Models\CD;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -17,22 +18,58 @@ class CampañaResource extends Resource
 {
     protected static ?string $model = Campaña::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-c-clipboard-document-check';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('cd.nombre')
-                    ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('nombre')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\DatePicker::make('fecha_realizacion')
-                    ->required(),
-                Forms\Components\TextInput::make('evidencia')
-                    ->maxLength(255),
+                Forms\Components\Section::make('Datos de Campaña')
+                    ->columns(3)
+                    ->schema([
+                        Forms\Components\Select::make('cd.id')
+                            ->label('CD')
+                            ->required()
+                            ->options(CD::all()->pluck('nombre', 'id'))
+                            ->searchable(),
+                        Forms\Components\TextInput::make('nombre')
+                            ->required()
+                            ->maxLength(255),
+                        Forms\Components\DatePicker::make('fecha_realizacion')
+                            ->required(),
+                    ]),
+                Forms\Components\Section::make('Evidencias de Campaña')
+                    ->columns(4)
+                    ->schema([
+                        Forms\Components\FileUpload::make('evidencia')
+                            ->label('Evidencia 1')
+                            ->disk('public')
+                            ->directory('evidencias')
+                            ->image()
+                            ->nullable()
+                            ->hiddenOn('edit'),
+                        Forms\Components\FileUpload::make('evidencia_1')
+                            ->label('Evidencia 2')
+                            ->disk('public')
+                            ->directory('evidencias')
+                            ->image()
+                            ->nullable()
+                            ->hiddenOn('edit'),
+                        Forms\Components\FileUpload::make('evidencia_2')
+                            ->label('Evidencia 3')
+                            ->disk('public')
+                            ->directory('evidencias')
+                            ->image()
+                            ->nullable()
+                            ->hiddenOn('edit'),
+                        Forms\Components\FileUpload::make('evidencia_3')
+                            ->label('Evidencia 4')
+                            ->disk('public')
+                            ->directory('evidencias')
+                            ->image()
+                            ->nullable()
+                            ->hiddenOn('edit'),
+                    ]),
             ]);
     }
 

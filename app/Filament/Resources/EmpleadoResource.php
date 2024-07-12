@@ -7,6 +7,7 @@ use App\Filament\Resources\EmpleadoResource\RelationManagers;
 use App\Models\CD;
 use App\Models\Empleado;
 use Filament\Forms;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -64,8 +65,7 @@ class EmpleadoResource extends Resource
                         ->disk('public')
                         ->directory('fotos_perfil')
                         ->image()
-                        ->nullable()
-                    ->hiddenOn('edit'),
+                        ->nullable(),
                 ]),
                 Forms\Components\Section::make('Informacion Laboral')
                     ->columns(3)
@@ -108,7 +108,6 @@ class EmpleadoResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('cd.nombre')
-                    ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('cedula')
                     ->searchable(),
@@ -153,7 +152,11 @@ class EmpleadoResource extends Resource
                 //
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+               //Tables\Actions\Action::make('view')
+                 //  ->label('Ver Perfil')
+                  //->url(fn ($record) => route('filament.admin.resources.empleados.view', $record->id)),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

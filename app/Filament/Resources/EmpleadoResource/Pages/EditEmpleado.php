@@ -10,6 +10,8 @@ class EditEmpleado extends EditRecord
 {
     protected static string $resource = EmpleadoResource::class;
 
+    protected static ?string $title = 'Editar Empleado';
+
     protected function getHeaderActions(): array
     {
         return [

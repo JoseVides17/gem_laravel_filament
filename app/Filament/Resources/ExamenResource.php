@@ -21,6 +21,8 @@ class ExamenResource extends Resource
 {
     protected static ?string $model = Examen::class;
 
+    protected static ?string $label = 'Examenes';
+
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $navigationGroup = "Gestion de Examenes";
     protected static ?string $navigationLabel = 'Examenes';
@@ -199,68 +201,61 @@ class ExamenResource extends Resource
                     ->sortable(),
                 Tables\Columns\TextColumn::make('nombre_empleado')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('fecha_previa')
-                    ->date()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('fecha_realizacion')
-                    ->date()
-                    ->sortable(),
+                //Tables\Columns\TextColumn::make('fecha_previa')
+                    //->date()
+                    //->sortable(),
+                //Tables\Columns\TextColumn::make('fecha_realizacion')
+                    //->date()
+                    //->sortable(),
                 Tables\Columns\TextColumn::make('fecha_vencimiento')
                     ->date()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('tipoExamen.nombre')
                     ->label('Tipo de examen')
                     ->sortable(),
-                Tables\Columns\TextColumn::make('dias_disponibles')
-                    ->numeric(),
+                //Tables\Columns\TextColumn::make('dias_disponibles')
+                    //->numeric(),
                 Tables\Columns\TextColumn::make('estatus')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('enfasis')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('lesion')
-                    ->searchable(),
-                Tables\Columns\IconColumn::make('fuma')
-                    ->boolean(),
-                Tables\Columns\TextColumn::make('CIG_DIA')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('consumo')
-                    ->searchable(),
-                Tables\Columns\IconColumn::make('psicoactivos')
-                    ->boolean(),
-                Tables\Columns\IconColumn::make('actividad_fisica')
-                    ->boolean(),
-                Tables\Columns\TextColumn::make('tipo_actividad_fisica')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('peso')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('talla')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('imc')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('interpretacion')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('valoracion')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('restricciones')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                //Tables\Columns\TextColumn::make('lesion')
+                    //->searchable(),
+                //Tables\Columns\IconColumn::make('fuma')
+                    //->boolean(),
+                //Tables\Columns\TextColumn::make('CIG_DIA')
+                    //->searchable(),
+                //Tables\Columns\TextColumn::make('consumo')
+                    //->searchable(),
+                //Tables\Columns\IconColumn::make('psicoactivos')
+                    //->boolean(),
+                //Tables\Columns\IconColumn::make('actividad_fisica')
+                    //->boolean(),
+                //Tables\Columns\TextColumn::make('tipo_actividad_fisica')
+                    //->searchable(),
+                //Tables\Columns\TextColumn::make('peso')
+                    //->numeric()
+                   // ->sortable(),
+               // Tables\Columns\TextColumn::make('talla')
+                    //->numeric()
+                    //->sortable(),
+               // Tables\Columns\TextColumn::make('imc')
+                    //->numeric()
+                    //->sortable(),
+                //Tables\Columns\TextColumn::make('interpretacion')
+                    //->searchable(),
+               // Tables\Columns\TextColumn::make('valoracion')
+                    //->searchable(),
+                //Tables\Columns\TextColumn::make('restricciones')
+                    //->searchable(),
+
             ])
             ->filters([
                 //
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\ViewAction::make(),//
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
