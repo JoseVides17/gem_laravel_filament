@@ -10,6 +10,6 @@ class EmpleadoController extends Controller
     public function show($id)
     {
         $empleado = Empleado::with('examenes')->findOrFail($id);
-        return view('empleados.show', compact('empleado'));
+        return view('empleados.detalles', compact('empleado'));
     }
 }

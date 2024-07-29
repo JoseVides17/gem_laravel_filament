@@ -26,6 +26,7 @@ class ExamenResource extends Resource
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
     protected static ?string $navigationGroup = "Gestion de Examenes";
     protected static ?string $navigationLabel = 'Examenes';
+    public static ?string $tenantOwnershipRelationshipName = 'team';
 
     public static function form(Form $form): Form
     {
@@ -37,7 +38,17 @@ class ExamenResource extends Resource
                         Forms\Components\Select::make('empleado_id')
                             ->label('Cedula')
                             ->required()
-                            ->options(Empleado::all()->pluck('cedula', 'id'))
+                            ->options(
+                                Empleado::where('cd_id', auth()->user()->cd_id)
+                                    ->get()
+                                    ->mapWithKeys(function ($empleado) {
+                                        return [
+                                            $empleado->id => "{$empleado->cedula}
+                                            - {$empleado->nombres}
+                                            - {$empleado->apellidos}"
+                                        ];
+                                    })
+                            )
                             ->searchable()
                             ->reactive()
                             ->afterStateUpdated(function ($state, callable $set) {
@@ -56,6 +67,7 @@ class ExamenResource extends Resource
                                 'No' => 'No',
                             ]),
                         Forms\Components\TextInput::make('peso')
+                            ->label('Peso (Kg)')
                             ->required()
                             ->reactive()
                             ->numeric()
@@ -76,6 +88,7 @@ class ExamenResource extends Resource
                                 }
                             }),
                         Forms\Components\TextInput::make('talla')
+                            ->label('Talla (Cm)')
                             ->required()
                             ->reactive()
                             ->numeric()
@@ -110,6 +123,8 @@ class ExamenResource extends Resource
                                 'No',
                                 'Si',
                             ]),
+                        Forms\Components\TextInput::make('CIG_DIA')
+                            ->label('CIG_DIA'),
                         Forms\Components\Select::make('psicoactivos')
                             ->label('Psicoactivos')
                             ->required()
@@ -124,6 +139,9 @@ class ExamenResource extends Resource
                                 'No',
                                 'Si',
                             ]),
+                        Forms\Components\TextInput::make('tipo_actividad_fisica')
+                            ->label('Tipo de Actividad Fisica')
+                            ->required(),
                         Forms\Components\Select::make('consumo')
                             ->label('Consumo')
                             ->required()
@@ -131,16 +149,6 @@ class ExamenResource extends Resource
                                 'No' => 'No',
                                 'Si' => 'Si',
                             ]),
-                        Forms\Components\Select::make('CIG_DIA')
-                            ->label('CIG_DIA')
-                            ->required()
-                            ->options([
-                                'No' => 'No',
-                                'Si' => 'Si',
-                            ]),
-                        Forms\Components\TextInput::make('tipo_actividad_fisica')
-                            ->label('Tipo de Actividad Fisica')
-                            ->required()
                     ]),
                 Forms\Components\Section::make('Informacion del Examen')
                     ->columns(3)
@@ -166,18 +174,36 @@ class ExamenResource extends Resource
                             ->required()
                             ->options(TipoExamen::all()->pluck('nombre', 'id'))
                             ->searchable(),
-                        Forms\Components\TextInput::make('valoracion')
-                            ->maxLength(255),
-                        Forms\Components\TextInput::make('restricciones')
-                            ->maxLength(255),
                         Forms\Components\Select::make('estatus')
                             ->required()
                         ->options([
                             'Vigente' => 'Vigente',
-                            'Anulado' => 'Anulado',
+                            'Vencido' => 'Vencido',
                         ]),
                         Forms\Components\TextInput::make('enfasis')
-                        ->required()
+                        ->required(),
+                        Forms\Components\Select::make('enfermedad_laboral')
+                            ->required()
+                            ->options([
+                                'No' => 'No',
+                                'Si' => 'Si',
+                            ]),
+                        Forms\Components\Select::make('accidente_trabajo')
+                            ->required()
+                            ->options([
+                                'No' => 'No',
+                                'Si' => 'Si',
+                            ]),
+                        Forms\Components\Select::make('enfermedad_comun')
+                            ->required()
+                            ->options([
+                                'No' => 'No',
+                                'Si' => 'Si',
+                            ]),
+                        Forms\Components\TextInput::make('valoracion')
+                            ->maxLength(255),
+                        Forms\Components\TextInput::make('restricciones')
+                            ->maxLength(255),
                     ]),
                 Forms\Components\Section::make('Recomendaciones')
                     ->schema([
@@ -195,12 +221,26 @@ class ExamenResource extends Resource
 
     public static function table(Table $table): Table
     {
+        if (!auth()->check())
+            return $table->paginated(false);
+
+        $user = auth()->user();
+
+        if (!$user->cd_id)
+            return $table->paginated(false);
+
+        $cd_id = $user->cd_id;
+
         return $table
+            ->query(Examen::query()->whereHas('empleado', function ($query) use ($cd_id) {
+                $query->where('cd_id', $cd_id);
+            }))
             ->columns([
                 Tables\Columns\TextColumn::make('empleado.cedula')
                     ->sortable(),
                 Tables\Columns\TextColumn::make('nombre_empleado')
-                    ->searchable(),
+                    ->searchable()
+                    ->sortable(),
                 //Tables\Columns\TextColumn::make('fecha_previa')
                     //->date()
                     //->sortable(),

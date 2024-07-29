@@ -2,8 +2,20 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Pages\MyDashboard;
+use App\Filament\Pages\Tenancy\RegisterTeam;
 use App\Filament\Pages\VerExamenes;
 use App\Filament\Resources\EmpleadoResource\Widgets\EmpleadoWidget;
+use App\Filament\Resources\ExamenResource\Pages\Stats;
+use App\Filament\Resources\ExamenResource\Widgets\ActividadFisicaWidget;
+use App\Filament\Resources\ExamenResource\Widgets\ExamenesPorDiaWidget;
+use App\Filament\Resources\ExamenResource\Widgets\ExamenesPorEmpleadoWidget;
+use App\Filament\Resources\ExamenResource\Widgets\ExamenesPorMesWidget;
+use App\Filament\Resources\ExamenResource\Widgets\ExamenWidget;
+use App\Filament\Resources\ExamenResource\Widgets\InterpretacionWidget;
+use App\Filament\Resources\ExamenResource\Widgets\PVEWidget;
+use App\Models\CD;
+use App\Models\Team;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -30,7 +42,7 @@ class AdminPanelProvider extends PanelProvider
             ->path('admin')
             ->login()
             ->colors([
-                'primary' => Color::Blue,
+                'primary' => Color::Amber,
             ])
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\\Filament\\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\\Filament\\Pages')
@@ -41,7 +53,7 @@ class AdminPanelProvider extends PanelProvider
             ->widgets([
                 //Widgets\AccountWidget::class,
                 //Widgets\FilamentInfoWidget::class,
-                EmpleadoWidget::class
+                EmpleadoWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,
@@ -57,5 +69,8 @@ class AdminPanelProvider extends PanelProvider
             ->authMiddleware([
                 Authenticate::class,
             ]);
+            //->tenant(Team::class)
+           // ->tenantRegistration(RegisterTeam::class)
+            //->registration();
     }
 }

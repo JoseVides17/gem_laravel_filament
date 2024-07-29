@@ -14,6 +14,7 @@ use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Nette\Utils\Image;
 
 class EmpleadoResource extends Resource
 {
@@ -60,6 +61,16 @@ class EmpleadoResource extends Resource
                     Forms\Components\TextInput::make('edad')
                         ->required()
                         ->numeric(),
+                    Forms\Components\FileUpload::make('carta_recomendacion')
+                        ->label('Carta de recomendacion')
+                        ->disk('public')
+                        ->directory('cartas_recomendacion')
+                        ->acceptedFileTypes(['application/pdf']),
+                    Forms\Components\FileUpload::make('concepto_medico')
+                        ->label('Concepto medico')
+                        ->disk('public')
+                        ->directory('conceptos_medicos')
+                        ->acceptedFileTypes(['application/pdf']),
                     Forms\Components\FileUpload::make('foto_perfil')
                         ->label('Foto de Perfil')
                         ->disk('public')
@@ -105,7 +116,19 @@ class EmpleadoResource extends Resource
 
     public static function table(Table $table): Table
     {
+        if (!auth()->check())
+            return $table->paginated(false);
+
+        $user = auth()->user();
+
+        if (!$user->cd_id)
+            return $table->paginated(false);
+
+        $empleados = Empleado::where('cd_id', $user->cd_id)->get();
+
+        if ($empleados->isNotEmpty())
         return $table
+            ->query(Empleado::query()->where('cd_id', $user->cd_id))
             ->columns([
                 Tables\Columns\TextColumn::make('cd.nombre')
                     ->sortable(),
@@ -115,27 +138,7 @@ class EmpleadoResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('apellidos')
                     ->searchable(),
-                Tables\Columns\TextColumn::make('foto_perfil')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('fecha_nacimiento')
-                    ->date()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('sexo')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('edad')
-                    ->numeric()
-                    ->sortable(),
                 Tables\Columns\TextColumn::make('cargo')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('departamento')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('eps')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('estado_civil')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('direccion')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('ciudad')
                     ->searchable(),
                 Tables\Columns\IconColumn::make('estado')
                     ->boolean(),
@@ -154,15 +157,14 @@ class EmpleadoResource extends Resource
             ->actions([
                 Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
-               //Tables\Actions\Action::make('view')
-                 //  ->label('Ver Perfil')
-                  //->url(fn ($record) => route('filament.admin.resources.empleados.view', $record->id)),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ]);
+        else
+            return $table->paginated(false);
     }
 
     public static function getRelations(): array
@@ -178,6 +180,7 @@ class EmpleadoResource extends Resource
             'index' => Pages\ListEmpleados::route('/'),
             'create' => Pages\CreateEmpleado::route('/create'),
             'edit' => Pages\EditEmpleado::route('/{record}/edit'),
+            //'view' => Pages\ViewEmpleado::route('/{record}/view'),
         ];
     }
 }

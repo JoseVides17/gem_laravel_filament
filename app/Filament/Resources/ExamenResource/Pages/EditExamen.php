@@ -10,6 +10,8 @@ class EditExamen extends EditRecord
 {
     protected static string $resource = ExamenResource::class;
 
+    protected static ?string $title = 'Editar Examen';
+
     protected function getHeaderActions(): array
     {
         return [

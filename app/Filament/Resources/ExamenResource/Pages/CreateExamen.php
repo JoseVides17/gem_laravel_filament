@@ -9,4 +9,5 @@ use Filament\Resources\Pages\CreateRecord;
 class CreateExamen extends CreateRecord
 {
     protected static string $resource = ExamenResource::class;
+    protected static ?string $title = 'Crear Examen';
 }

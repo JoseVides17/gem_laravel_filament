@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\ExamenResource\Pages;
 
 use App\Filament\Resources\ExamenResource;
+use App\Models\Empleado;
 use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 

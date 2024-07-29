@@ -6,6 +6,8 @@ use App\Filament\Resources\CampañaResource\Pages;
 use App\Filament\Resources\CampañaResource\RelationManagers;
 use App\Models\Campaña;
 use App\Models\CD;
+use App\Models\Empleado;
+use Filament\Actions\ViewAction;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -27,7 +29,7 @@ class CampañaResource extends Resource
                 Forms\Components\Section::make('Datos de Campaña')
                     ->columns(3)
                     ->schema([
-                        Forms\Components\Select::make('cd.id')
+                        Forms\Components\Select::make('cd_id')
                             ->label('CD')
                             ->required()
                             ->options(CD::all()->pluck('nombre', 'id'))
@@ -46,67 +48,75 @@ class CampañaResource extends Resource
                             ->disk('public')
                             ->directory('evidencias')
                             ->image()
-                            ->nullable()
-                            ->hiddenOn('edit'),
+                            ->nullable(),
+
                         Forms\Components\FileUpload::make('evidencia_1')
                             ->label('Evidencia 2')
                             ->disk('public')
                             ->directory('evidencias')
                             ->image()
-                            ->nullable()
-                            ->hiddenOn('edit'),
+                            ->nullable(),
                         Forms\Components\FileUpload::make('evidencia_2')
                             ->label('Evidencia 3')
                             ->disk('public')
                             ->directory('evidencias')
                             ->image()
-                            ->nullable()
-                            ->hiddenOn('edit'),
+                            ->nullable(),
                         Forms\Components\FileUpload::make('evidencia_3')
                             ->label('Evidencia 4')
                             ->disk('public')
                             ->directory('evidencias')
                             ->image()
-                            ->nullable()
-                            ->hiddenOn('edit'),
+                            ->nullable(),
                     ]),
             ]);
     }
 
     public static function table(Table $table): Table
     {
-        return $table
-            ->columns([
-                Tables\Columns\TextColumn::make('cd_id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('nombre')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('fecha_realizacion')
-                    ->date()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('evidencia')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-            ])
-            ->filters([
-                //
-            ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
-            ]);
+        if (!auth()->check())
+            return $table->paginated(false);
+
+        $user = auth()->user();
+
+        if (!$user->cd_id)
+            return $table->paginated(false);
+
+        $cd_id = $user->cd_id;
+            return $table
+                ->query(Campaña::query()->where('cd_id', $cd_id))
+                ->columns([
+                    Tables\Columns\TextColumn::make('cd.nombre')
+                        ->numeric()
+                        ->sortable(),
+                    Tables\Columns\TextColumn::make('nombre')
+                        ->searchable(),
+                    Tables\Columns\TextColumn::make('fecha_realizacion')
+                        ->date()
+                        ->sortable(),
+                    Tables\Columns\TextColumn::make('evidencia')
+                        ->searchable(),
+                    Tables\Columns\TextColumn::make('created_at')
+                        ->dateTime()
+                        ->sortable()
+                        ->toggleable(isToggledHiddenByDefault: true),
+                    Tables\Columns\TextColumn::make('updated_at')
+                        ->dateTime()
+                        ->sortable()
+                        ->toggleable(isToggledHiddenByDefault: true),
+                ])
+                ->filters([
+                    // Agrega tus filtros aquí
+                ])
+                ->actions([
+                    Tables\Actions\EditAction::make(),
+                    Tables\Actions\ViewAction::make(),
+                ])
+                ->bulkActions([
+                    Tables\Actions\BulkActionGroup::make([
+                        Tables\Actions\DeleteBulkAction::make(),
+                    ]),
+                ]);
     }
 
     public static function getRelations(): array
