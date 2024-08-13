@@ -14,10 +14,16 @@ class EmpleadoWidget extends Widget
     protected static string $view = 'filament.resources.empleado-resource.widgets.empleado-widget';
 
     public $empleados;
+    public $cargos;
+
     public function mount()
     {
+        $cd_id = auth()->user()->cd_id;
+
         $this->empleados = Empleado::whereHas('examenes')
             ->orderBy('nombres', 'asc')
             ->get();
+
+        $this->cargos = Empleado::where('cd_id', $cd_id)->distinct()->pluck('cargo')->toArray();
     }
 }
